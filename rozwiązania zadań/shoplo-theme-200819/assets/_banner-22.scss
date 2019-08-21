@@ -1,0 +1,45 @@
+.shb-banner-22 {
+  // margin: $elementMargin;
+
+  .shb-blankslate-banner {
+    .shb-banner-image {
+      @extend %shb-blankslate-banner-figure;
+      @include banner-height(400px, 460px, 560px);
+    }
+
+    figure {
+      @include until($tablet) {
+        display: block;
+        text-align: center;
+
+        .shb-banner-text {
+          margin-bottom: 20px;
+          justify-content: center;
+        }
+      }
+    }
+  }
+
+  figure {
+    .shb-banner-image {
+      img {
+        max-width: 100%;
+      }
+    }
+
+    figcaption {
+      h2 {
+        font-size: rem-calc(54);
+        line-height: rem-calc(65);
+        margin: 0;
+      }
+
+      p {
+        font-size: $font-size-base;
+        line-height: rem-calc(25);
+        margin-top: rem-calc(10);
+        margin-bottom: rem-calc(30);
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+.shb-header-1 {
+  @extend %shb-banner-after-header;
+
+  .shb-header-top {
+    @extend %shb-header-top;
+  }
+  .shb-header-social {
+    @extend %social-links;
+    li {
+      margin-right: 7px;
+    }
+  }
+  #logo {
+    @extend %shb-header-logo;
+  }
+  .shb-right-header {
+    @extend %shb-right-header;
+  }
+  .shb-cart-widget {
+    @extend %shb-cart-widget;
+  }
+  .shb-navbar {
+    background-color: $header-navbar-background;
+    a {
+      color: $header-navbar-links-color;
+    }
+    #mobileNav {
+      @extend %shb-mobile-nav;
+    }
+    #mainNav {
+      .shb-nav-item {
+        @extend %shb-nav-item;
+        > a {
+          border-bottom: 2px solid transparent;
+          padding-bottom: 1px;
+          &:hover {
+            border-bottom-color: $header-navbar-links-color;
+          }
+        }
+        &.active {
+          a {
+            border-bottom-color: $header-navbar-links-color;
+          }
+        }
+        .shb-submenu {
+          background-color: $header-navbar-background;
+        }
+      }
+    }
+    &.is-sticky {
+      @extend %is-sticky;
+    }
+  }
+}

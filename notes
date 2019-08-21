@@ -1,0 +1,20 @@
+Podgląd sklepu:
+https://dawid-galeziewski.shoplo.com/
+
+#Code creating navigation is located in main_nav.tpl
+
+	<div class="pictures-wrapper">
+		<div="columns">
+			<img class="pictures-wrapper__image" src="https://images.unsplash.com/photo-1545075885-39e65fc25e12?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80" alt="gallery picture">
+			<img class="pictures-wrapper__image" src="https://images.unsplash.com/photo-1566191142644-9b5c6e45f344?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="gallery picture">
+			<img class="pictures-wrapper__image"  src="https://images.unsplash.com/photo-1566261652393-56860041d70f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="gallery picture">
+		</div>
+		<div="columns">
+			<img class="pictures-wrapper__image"  src="https://images.unsplash.com/photo-1566287045674-0372c7a0c303?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="gallery picture">
+			<img class="pictures-wrapper__image" src="https://images.unsplash.com/photo-1566252014492-85744a081c2d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="gallery picture">
+			<img class="pictures-wrapper__image" src="https://images.unsplash.com/photo-1566242635502-d51649e6c8df?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="gallery picture">
+		</div>
+		<div="columns">
+			<img class="pictures-wrapper__image" src="https://images.unsplash.com/photo-1566242635518-5aecc3db686f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="gallery picture">
+			<img class="pictures-wrapper__image" src="https://images.unsplash.com/photo-1566240069755-96c228dd911d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60" alt="gallery picture">
+		</div>
