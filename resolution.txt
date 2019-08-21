@@ -96,8 +96,82 @@ added code at the bottom:
  5. Stwórz trzeci poziom menu (wyłącznie w rozdzielczości na desktop).
 Rekomendujemy wykorzystanie smarty, ale można też wykorzystać html i js/css.
 
-Code is at main_nav.tpl
-Need to learn more on smarty
+W pliku main_nav.tpl dodałem kolejną navigację do tego zadania:
+
+  <ul class="shb-list-inline">
+    {foreach from=$menulists->main_menu->links item="menu"}
+      <li class="shb-nav-item{if ($template == 'category') && $menu->url|strpos:$category->url !== false} active
+      {elseif $template == 'collection' && ($menu->url|strpos:$collection->url !== false)} active
+      {elseif $template == 'list_categories' && ($menu->url|strpos:'/all' != false || $menu->url|strpos:'/wszystkie' != false)} active
+      {elseif isset($page) and $page->url == $menu->url} active
+      {elseif isset($product) and $product_url == $menu->url} active
+      {elseif $template == 'home'}{if $menu->url == '/'} active{/if}{/if}">
+        <a href="{$menu->url}">{$menu->title}</a>
+        {if $menulists->{$menu->title|lower|replace:$langletters:$letters}->links|count > 0}
+          <ul class="shb-submenu shb-list-block">
+            {foreach $menulists->{$menu->title|lower|replace:$langletters:$letters}->links item="submenu"}
+              <li><a href="{$submenu->url}">{$submenu->title} </a> </li>
+            {/foreach}
+          </ul>
+        {/if}
+      </li>
+    {/foreach}
+  </ul>
+
+Zagnieździłem sumenu po raz drugi dla każdego li
+
+Następnie w pliku _header.scss nadpisałem wygląd navigacji:
+//Dawid was here
+.shb-list-inline--modify {
+	background-color: #fff;
+	color: black;
+	
+	%shb-nav-item {
+	  a {
+		  color: #000;
+		  background-color: #fff;
+	  }
+
+	  .shb-submenu {
+		  background-color: #fff;
+		li {
+		  padding: 3px 8px;
+
+
+			ul.shb-submenu__nested{
+				background-color: #fff;
+				position: absolute;
+				left: calc(100% + 2px);
+				top: 0;
+				display: none;
+			}
+
+			&:hover ul.shb-submenu__nested {
+				display: block;
+			}
+
+
+
+		  a {
+			  background-color: #fff;
+			&:hover {
+			  text-decoration: underline;
+			}
+		  }
+
+		  &.active {
+		  }
+		}
+	  }
+
+	  &:hover {
+		.shb-submenu {
+
+		}
+	  }
+	}	
+	
+}
 
 
 6. Stwórz element, który będzie wyświetlał się na stronie głównej po 5s od
@@ -109,8 +183,8 @@ nie może być klikalny. Element powinien zniknąć po 5 sekundach, oraz nie
 powinien pojawić się przy kolejnym wejściu na stronę.
 
 
-style added to _header.scss
-html added to base.tpl
+
+html dodałem do base.tpl (zakładam że komunikat ma się wyświetlać dla wszystkich podstron nie tylko home)
 
 <!-- Dawid was here -->
 <section id="ls-issues-alert">
@@ -140,3 +214,104 @@ html added to base.tpl
 	</div>
 </section>
 <!-- Dawid was here /end -->
+
+
+Dodałem style do _header.scss
+//Dawid was here
+.issue-alert{
+	z-index: 5;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	
+	.issue-alert-prompt {
+		position: absolute;
+		right: 50%;
+		top: 500px;
+		width: 500px;
+		
+
+		.head {
+			color: #fff;
+			background-color: #45443f;
+			background: linear-gradient(#616056, #403f3a);
+			padding: 0.3rem;
+			border-radius: 5px 5px 0 0;
+
+			&__options {
+			  list-style: none;
+			  display: inline-block;
+			  margin: 0 0.5rem 0 0.2rem;
+
+			  .icon {
+				vertical-align: middle;
+				width: 1.2rem;
+				height: 1.2rem;
+				border-radius: 50px;
+				display: inline-block;
+				background-color: #807e7c;
+				background: linear-gradient(#807e7c, #616056);
+				text-align: center;
+				color: #45443f;
+				font-weight: bold;
+				font-size: 1.1rem;
+
+				&--close {
+				  background-color: #dd5c24;
+				  background: linear-gradient(#e2885e, #dd5c24);
+				  text-align: center;
+				}
+			  }
+			}
+
+			&__whoami {
+			  display: inline-block;
+			  vertical-align: middle;
+			  font-weight: bold;
+			}
+		  }
+
+		  .text-body{
+			  text-align: center;
+			  background-color: #f2f1f0;
+			  border: 1px solid #45443f;
+			  padding-bottom: 2rem;
+
+			  &__title{
+				  color: #4c4c4c;
+				  margin: 0;
+				  margin-top: 1rem;
+				  font-size: 1.5rem;
+			  }
+
+			  &__details {
+				color: #4c4c4c;
+				margin-top: 1rem;
+			  }
+
+			  &__help{
+				display: inline-block;
+				margin-top: 1rem;
+			  }
+		  }
+
+	}
+}
+
+Kilkanie zablokowałem dodając absolute na elemencie potomnym samego prompta i rozciągając go na całą stronę.
+Alternatywnie można było by utworzyć dodatkowego diva screen I nadać mu opacity: 0.4 by uzyskać efekt maski często spotykany na stronie.
+
+Funkcje odpowiedzialną za usunięcie popupu dodałem w main.js:
+
+//Dawid was here
+function hidePromptOnLoad(){
+	window.setTimeout(function(){
+		const promptSection = document.getElementById('issue-alert');
+		promptSection.style.display = "none";
+	}, 5000)
+
+}
+
+document.addEventListener('DOMContentLoaded', hidePromptOnLoad , false);
+
+Dodać localStorage
