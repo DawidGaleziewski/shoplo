@@ -300,18 +300,166 @@ Dodałem style do _header.scss
 
 Kilkanie zablokowałem dodając absolute na elemencie potomnym samego prompta i rozciągając go na całą stronę.
 Alternatywnie można było by utworzyć dodatkowego diva screen I nadać mu opacity: 0.4 by uzyskać efekt maski często spotykany na stronie.
+Domyślnie cała sekcja ma ustawiony display: none;
 
-Funkcje odpowiedzialną za usunięcie popupu dodałem w main.js:
+Natomiast logika w js wygląda tak:
+1. Sprawdź czy localStorage jest dostępny 
+Zapobiega to problemom w przypadku gdy localStorage jest niedostępny (zapełniony lub niedostępny tak jak na przeglądarkach safari w trybie incognito);
+
+2. Sprawdź czy flaga została wcześniej ustawiona w localStorage
+
+3. Jeśli jakikolwiek z poprzednich warunków został spełniony wyświetl powiadomienie na 5sek od momentu załadowania
+
+4. Schowaj powiadomienie
+
+5. Spróbuj ustawić localStorage by zapobiec przyszłym powiadomieniom
 
 //Dawid was here
+//Test local storage for availability
+function localStorageIsAvailable(){
+	try {
+		// Test if local storage can be set
+		//Flag this user to know he has seen the warning
+		const testString = 'localStorage';
+		localStorage.setItem(testString, testString);
+		localStorage.removeItem(testString);
+
+		// If no error occures return true
+		return true
+	} catch(e){
+		// Error control if issue occures
+		return e instanceof DOMException && (
+			// everything except Firefox
+			e.code === 22 ||
+			// Firefox
+			e.code === 1014 ||
+			// test name field too, because code might not be present
+			// everything except Firefox
+			e.name === 'QuotaExceededError' ||
+			// Firefox
+			e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+			// acknowledge QuotaExceededError only if there's something already stored
+			(storage && storage.length !== 0);
+	}
+}
+
+
+
+
 function hidePromptOnLoad(){
+	
+	//If local storage cannot be checked at all or user was not warned yet, run the warning
+	if(!localStorageIsAvailable() || !localStorage.getItem('warningIsSet')) {
+	const promptSection = document.getElementById('issue-alert');
+	promptSection.style.display = "block";
 	window.setTimeout(function(){
+		
+		promptSection.style.display = "none";
+		
+			if(localStorageIsAvailable()){
+				localStorage.setItem('warningIsSet', '1')
+			}
+		
+		}, 5000)	
+	} else {
+		//If user was warned before hide the prompt right away
 		const promptSection = document.getElementById('issue-alert');
 		promptSection.style.display = "none";
-	}, 5000)
+	}
+	
 
 }
 
 document.addEventListener('DOMContentLoaded', hidePromptOnLoad , false);
 
-Dodać localStorage
+
+
+7. Na banerze głównym zrób tak, aby po przełączeniu slajdu, po 1 sekundzie
+pojawił się jakiś napis.
+
+Dodałem div z html w pliku home.tpl.
+
+
+		<!--Dawid was here -->
+		<div id="slider-subtitle-custom" class="slider-subtitle-custom">
+			<span class="slider-subtitle__text">Test</span>
+		</div>
+		<!--Dawid was here -->
+
+
+Ostylowałem div w pliku _banner.scss		
+.slider-subtitle-custom {
+	position: absolute;
+	z-index: 5;
+	top: 50%;
+	left: 50%;
+
+	color: crimson;
+	
+	transform: translate(-50%, -50%);
+	
+	font-size: 20vw;
+}
+
+
+Ostatecznie używając slick.js użytego do przechodzenia międzt zdjęciami dodałem następującą logikę w pliku banner_7.js
+1. Po zmianie slajdu, poczekaj 1s i wyświetl napis 
+2. Przed zmianą na kolejny slajd schowaj napis
+
+
+//Dawid has been here
+$('.shb-banner-7').on('afterChange', function(event, slick, currentSlide, nextSlide){
+	const slideText = document.getElementById('slider-subtitle-custom');
+	
+	setTimeout(function(){
+		slideText.style.opacity = '1';
+	}, 1000)
+	
+})
+
+$('.shb-banner-7').on('beforeChange', function(event, slick, currentSlide, nextSlide){
+	const slideText = document.getElementById('slider-subtitle-custom');
+	
+		slideText.style.opacity = '0';
+	
+})
+
+
+8. Dodaj input tekstowy na stronie produktu nad przyciskiem DO KOSZYKA. W
+zależności od ilości wpisanych znaków cena produktu musi się zwiększać (1
+znak = + 5 zł).
+
+Input dodałem nad product_view_1.tpl 
+	  <div  class="colums">
+		  <input id="charge-words" type="text">
+	  </div>
+
+shb-product-list-price
+
+w pliku main.js dodałem funkcję odpowiedzialną za zmianę ceny
+
+
+//Dawid was here
+function addPriceForCharacters(){
+	const UIinput = document.getElementById('charge-words');
+	const UIprice = document.querySelector('.product-list .shb-product-list-price');
+	const originalPrice = parseFloat(UIprice.innerText, 2);
+	console.log(originalPrice)
+	let trackPrice = 0;
+	
+	UIinput.addEventListener('keyup', function(){
+		const charactersPrice = UIinput.value.replace(/\s/g, "").split('').length * 5
+		const totalPrice = originalPrice + charactersPrice;
+		UIprice.innerText = `${totalPrice} zł`
+	})
+}
+
+if(document.getElementById('charge-words')){
+	addPriceForCharacters()
+}
+
+
+9. Dodaj własną stronę za pomocą zakładki “Strony i blogi”. Niech strona nazywa
+się FAQ. Utwórz trzy nagłówki z akapitami. Wszystkie akapity na wejściu na
+stronę powinny być ukryte, a rozwijać się dopiero po kliknięciu w nagłówek. Po
+kliknięciu w inny nagłówek, powinny też chować się wcześniej odsłonięte akapity.

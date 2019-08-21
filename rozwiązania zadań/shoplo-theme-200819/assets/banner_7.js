@@ -52,6 +52,12 @@ jQuery( document ).ready(function( $ ) {
           });
         },
 
+        showText: function(){
+          $('.your-element').on('afterChange', function(event, slick, currentSlide, nextSlide){
+            console.log(nextSlide);
+          });
+        }
+
     };
 
     BANNER_7.init();
